@@ -14,7 +14,7 @@ export default function TaskNavbar() {
     })
 
     return (
-        <div className="border-2 border-slate-300 w-[300px]">
+        <div className="border-2 border-slate-300 w-[280px] mr-8">
             {...NavTodos}
         </div>
     )

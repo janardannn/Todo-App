@@ -15,11 +15,13 @@ export default function App() {
   return (
     <>
       <Header />
-      <div className="flex flex-row justify-around">
-        <TaskNavbar />
-        <div className="flex flex-col">
-          {...TaskItems}
-          <AddTask />
+      <div className="flex justify-center">
+        <div className="flex flex-row mx-28">
+          <TaskNavbar />
+          <div className="flex flex-col">
+            {...TaskItems}
+            <AddTask />
+          </div>
         </div>
       </div>
       <Footer />
