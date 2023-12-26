@@ -1,6 +1,6 @@
 import Header from "./components/Header";
 import Footer from "./components/Footer"
-import TaskNavbar from "./components/TaskNavbar.tsx";
+import Navbar from "./components/Navbar.tsx";
 import TaskItem from "./components/TaskItem.tsx"
 import AddTask from "./components/AddTask.tsx"
 import { useState } from "react";
@@ -17,7 +17,7 @@ export default function App() {
       <Header />
       <div className="flex justify-center">
         <div className="flex flex-row mx-28">
-          <TaskNavbar />
+          <Navbar />
           <div className="flex flex-col">
             {...TaskItems}
             <AddTask />
