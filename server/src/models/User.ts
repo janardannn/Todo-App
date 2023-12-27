@@ -1,9 +1,9 @@
-export function GetUserModel(mongooseInstance) {
-    const UserSchema = new mongooseInstance.Schema({
-        username: String,
-        hashedPassword: String
-    })
+import mongoose from "mongoose";
+import { UserType } from "../types/UserType";
 
-    const Users = mongooseInstance.model("Users", UserSchema)
-    return Users;
-}
+const UserSchema = new mongoose.Schema<UserType>({
+    username: String,
+    hashedPassword: String
+})
+
+export const UserModel = mongoose.model<UserType>("Users", UserSchema)

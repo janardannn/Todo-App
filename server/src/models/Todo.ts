@@ -1,10 +1,11 @@
-export function GetTodoModel(mongooseInstance) {
-    const TodoSchema = new mongooseInstance.Schema({
-        user: String,
-        TodoTitle: String,
-        Tasks: [String]
-    })
+import mongoose from "mongoose";
+import { TodoType } from "../types/TodoType";
 
-    const Todos = mongooseInstance.model("Todos", TodoSchema);
-    return Todos;
-}
+const TodoSchema = new mongoose.Schema<TodoType>({
+    user: String,
+    TodoTitle: String,
+    Tasks: [String]
+})
+
+export const TodoModel = mongoose.model<TodoType>("Todos", TodoSchema);
+
