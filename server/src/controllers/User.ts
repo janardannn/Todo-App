@@ -1,12 +1,13 @@
 import { UserModel } from "../models/User";
 import { UserType } from "../types/UserType";
 import md5 from "md5";
-import * as jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import express from "express";
+import mongoose from "mongoose";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const Users = UserModel;
+const Users: mongoose.Model<UserType> = UserModel;
 
 const GetAllUsers = async (req: express.Request, res: express.Response) => {
     const AllUserObjs = await Users.find();
@@ -18,6 +19,10 @@ const GetAllUsers = async (req: express.Request, res: express.Response) => {
     }
 
     return AllUsers;
+}
+
+export const GetUser = async (req: express.Request, res: express.Response) => {
+
 }
 
 export const RegisterUser = (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -45,7 +50,7 @@ export const RegisterUser = (req: express.Request, res: express.Response, next: 
     console.log("Registration successfull!");
 }
 
-export function LoginUser(req, res, next, Users, JWT_SECRET) {
+export function LoginUser(req: express.Request, res: express.Response, next: express.NextFunction) {
 
     const username: string = req.header['username'] as string;
     const password: string = req.header['password'] as string;
