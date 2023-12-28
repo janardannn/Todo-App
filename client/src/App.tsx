@@ -3,7 +3,6 @@ import Footer from "./components/Footer"
 import Navbar from "./components/Navbar.tsx";
 import TaskItem from "./components/Task.tsx"
 import AddTask from "./components/AddTask.tsx"
-import React from "react";
 import { useState } from "react";
 
 export default function App() {
@@ -12,6 +11,7 @@ export default function App() {
     <TaskItem taskTitle="Task 2 " />,
     <TaskItem taskTitle="Task 3 " />,
     <TaskItem taskTitle="Task 4 " />,
+    <TaskItem taskTitle="Task 5 " />,
   ])
   return (
     <>

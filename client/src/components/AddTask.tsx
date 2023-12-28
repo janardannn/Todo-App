@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function AddTask(props: any) {
     return (
         <div className="text-center flex flex-row justify-between w-[500px] h-[75px] border-2 border-slate-200 p-2.5 ml-8 rounded-lg">

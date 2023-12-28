@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function TodoItem(props: any) {
     return (
         <div className="border-2 p-3 text-center w-[278px] flex flex-row justify-between h-[75px] rounded-xl" onClick={props.DisplayClickedNavbarItems}>
