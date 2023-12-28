@@ -1,8 +1,9 @@
 import Header from "./components/Header";
 import Footer from "./components/Footer"
 import Navbar from "./components/Navbar.tsx";
-import TaskItem from "./components/TaskItem.tsx"
+import TaskItem from "./components/Task.tsx"
 import AddTask from "./components/AddTask.tsx"
+import React from "react";
 import { useState } from "react";
 
 export default function App() {
