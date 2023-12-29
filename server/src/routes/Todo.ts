@@ -1,10 +1,11 @@
-import { CreateTask, CreateTodo, DeleteTask, DeleteTodo, GetAllTasksOfATodo, GetAllTodos } from "../controllers/Todo"
+import { CreateTask, CreateTodo, MarkTaskStatus, DeleteTask, DeleteTodo, GetAllTasksOfATodo, GetAllTodos } from "../controllers/Todo"
 import express from "express";
 
 const router = express.Router();
 
 router.post("/create_task", CreateTask);
 router.post("/create_todo", CreateTodo);
+router.post("/task_status", MarkTaskStatus);
 
 router.delete("/delete_task", DeleteTask);
 router.delete("/delete_todo", DeleteTodo);

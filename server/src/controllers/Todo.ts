@@ -14,17 +14,57 @@ const CheckIfTodoExists = async (TodoTitle: string, user: string) => {
     else false;
 }
 
+export const MarkTaskStatus = async (req: express.Request, res: express.Response) => {
+    const TodoTitle: string = req.body.TodoTitle;
+    const Task: string = req.body.Task;
+    const user: string = req.body.user;
+    const status: boolean = req.body.isDone;
+
+    try {
+        if (await CheckIfTodoExists(TodoTitle, user)) {
+            let Todo: any = await Todos.findOne({ TodoTitle, user });
+
+            // Todo.Tasks.push({ Task: Task, isDone });
+            for (let i = 0; i < Todo.Tasks.length; i++) {
+                if (Todo.Tasks[i].Task === Task) {
+                    Todo.Tasks[i].isDone = status;
+                }
+            }
+
+            await Todo.save();
+
+            res.status(201).json({
+                msg: status === true ? "Task marked as done" : "Task marked as not done"
+            });
+        }
+        else {
+            res.status(403).json({
+                msg: "Todo does not exist"
+            })
+        }
+
+    }
+    catch (err) {
+        console.log(err);
+        res.status(501).json({
+            msg: "Failed to mark task as done"
+        })
+    }
+
+}
+
 export const CreateTask = async (req: express.Request, res: express.Response) => {
 
     try {
         const TodoTitle: string = req.body.TodoTitle;
         const NewTask: string = req.body.Task;
         const user: string = req.body.user;
+        const isDone: boolean = false;
 
         if (await CheckIfTodoExists(TodoTitle, user)) {
-            let Todo: any = await Todos.findOne({ TodoTitle, });
+            let Todo: any = await Todos.findOne({ TodoTitle, user });
 
-            Todo.Tasks.push(NewTask);
+            Todo.Tasks.push({ Task: NewTask, isDone });
 
             await Todo.save();
 
@@ -108,12 +148,12 @@ export const DeleteTask = async (req: express.Request, res: express.Response) =>
 
 
         if (await CheckIfTodoExists(TodoTitle, user)) {
-            let Todo: any = await Todos.findOne({ TodoTitle, user });
+            let Todo: any = await Todos.findOne({ user, TodoTitle });
 
-            let tempTasks: [string] = Todo.Tasks;
+            let tempTasks: [{ Task: string, isDone: boolean }] = Todo.Tasks;
 
             for (let i = 0; i < tempTasks.length; i++) {
-                if (tempTasks[i] === Task) {
+                if (tempTasks[i].Task === Task) {
                     tempTasks.splice(i, 1);
                     break;
                 }
@@ -203,7 +243,13 @@ export const GetAllTasksOfATodo = async (req: express.Request, res: express.Resp
         if (await CheckIfTodoExists(TodoTitle, user)) {
 
             const Todo: any = await Todos.findOne({ TodoTitle, user });
-            res.status(200).json({ Tasks: Todo.Tasks });
+            let tasks: { Task: string, isDone: boolean }[] = [];
+
+            for (let i = 0; i < Todo.Tasks.length; i++) {
+                tasks.push({ Task: Todo.Tasks[i].Task, isDone: Todo.Tasks[i].isDone })
+            }
+
+            res.status(200).json({ Tasks: tasks });
         }
         else {
             res.status(403).json({
@@ -229,9 +275,45 @@ export const GetAllTodos = async (req: express.Request, res: express.Response) =
             AllTodos.push(AllTodoObjs[i].TodoTitle)
         }
 
-        res.status(200).json({
-            Todos: AllTodos
-        })
+        if (AllTodoObjs !== null) {
+            let TodosArray: {
+                user: string,
+                TodoTitle: string,
+                Tasks: {
+                    Task: string,
+                    isDone: boolean
+                }[]
+            }[] = [];
+
+            for (let i = 0; i < AllTodoObjs.length; i++) {
+
+                let curr_obj = AllTodoObjs[i];
+
+                let curr_obj_tasks:
+                    {
+                        Task: string,
+                        isDone: boolean
+                    }[] = [];
+
+                for (let j = 0; j < curr_obj.Tasks.length; j++) {
+                    curr_obj_tasks.push({ Task: curr_obj.Tasks[j].Task, isDone: curr_obj.Tasks[j].isDone })
+                }
+
+                TodosArray.push({
+                    user: user,
+                    TodoTitle: curr_obj.TodoTitle,
+                    Tasks: curr_obj_tasks
+                })
+            }
+
+            res.status(200).json({
+                Todos: TodosArray
+            })
+        }
+        else {
+            res.status(503).json("Could not get todos")
+        }
+
     }
     catch (err) {
         console.log(err);
