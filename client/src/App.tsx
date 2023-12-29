@@ -3,16 +3,31 @@ import Footer from "./components/Footer"
 import Navbar from "./components/Navbar.tsx";
 import TaskItem from "./components/Task.tsx"
 import AddTask from "./components/AddTask.tsx"
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+
 
 export default function App() {
-  const [TaskItems, setTaskItems] = useState([
-    <TaskItem taskTitle="Task 1 " />,
-    <TaskItem taskTitle="Task 2 " />,
-    <TaskItem taskTitle="Task 3 " />,
-    <TaskItem taskTitle="Task 4 " />,
-    <TaskItem taskTitle="Task 5 " />,
-  ])
+  const [TaskItems, setTaskItems] = useState([])
+
+  // const [Todos, setTodos] = useState([]);
+  // const [Tasks, setTasks] = useState([]);
+
+  // useEffect(() => {
+  //   const getAllTodos = async () => {
+  //     const data = await axios.get("http://localhost:7777/todo/get_todos", {
+  //       headers: { 'Content-Type': 'application/json' },
+  //       data: { user: "janardan" }
+  //     })
+  //   }
+  //   getAllTodos();
+
+  // }, [])
+
   return (
     <>
       <Header />
@@ -21,7 +36,7 @@ export default function App() {
           <Navbar />
           <div className="flex flex-col">
             {...TaskItems}
-            <AddTask />
+            <AddTask state={TaskItems} add_to_state={setTaskItems} />
           </div>
         </div>
       </div>
