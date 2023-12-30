@@ -232,8 +232,8 @@ export const DeleteTodo = async (req: express.Request, res: express.Response) =>
 export const GetAllTasksOfATodo = async (req: express.Request, res: express.Response) => {
     try {
 
-        const TodoTitle: string = req.body.TodoTitle;
-        const user: string = req.body.user;
+        const TodoTitle: string = req.query.TodoTitle as string;
+        const user: string = req.query.user as string;
 
         // Check if todo exists
         // const exists = await Todos.findOne({ TodoTitle })
@@ -266,7 +266,7 @@ export const GetAllTasksOfATodo = async (req: express.Request, res: express.Resp
 
 export const GetAllTodos = async (req: express.Request, res: express.Response) => {
     try {
-        const user: string = req.body.user;
+        const user: string = req.query.user as string;
         let AllTodoObjs = await Todos.find({ user });
 
         let AllTodos: string[] = [];

@@ -1,5 +1,7 @@
 require('dotenv').config();
-const express = require("express");
+import express from "express";
+
+const cors = require("cors");
 const mongoose = require("mongoose");
 
 import { AuthenticateUser } from "./middlewares/Authetication";
@@ -18,6 +20,8 @@ const MONGODB_URL = process.env.MONGODB_URL;
 
 // Initialize all
 const app = express();
+
+app.use(cors());
 app.use(express.json());
 app.use(LogUserActivity);
 
