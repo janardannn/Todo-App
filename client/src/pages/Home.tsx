@@ -73,7 +73,7 @@ export default function Home() {
         setTaskItems(() => {
             return (
                 tasks.map(task => <div key={task.Task}>
-                    <TaskItem taskTitle={task.Task} />
+                    <TaskItem taskTitle={task.Task} taskDelete={handleDeleteTask} />
                 </div>)
             )
         })
@@ -87,7 +87,7 @@ export default function Home() {
 
         if (newTask.trim() !== "") {
             setTasks([...tasks, { Task: newTask, isDone: false }])
-            console.log(todoTitle, newTask, user)
+            // console.log(todoTitle, newTask, user)
             axios.post("http://localhost:7777/todo/create_task",
                 {
                     TodoTitle: todoTitle,
@@ -103,13 +103,26 @@ export default function Home() {
     }
     // console.log(NewTask)
 
+    const handleDeleteTask = async (taskTitle: string) => {
+        await axios.delete("http://localhost:7777/todo/delete_task",
+            {
+                data: {
+                    TodoTitle: todoTitle,
+                    Task: taskTitle,
+                    user: user
+                },
+                headers: { 'Content-Type': 'application/json' }
+            })
+        setTasks(tasks.filter(task => task.Task !== taskTitle))
+    }
+
     const handleTaskStatus = async () => {
 
     }
 
     return (
         <div>
-            <Header />
+            <Header />n
             {/* {tasks.map(task => {
                 <TaskItem taskTitle={}/>
             })} */}
