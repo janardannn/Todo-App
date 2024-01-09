@@ -73,7 +73,7 @@ export default function Home() {
         setTaskItems(() => {
             return (
                 tasks.map(task => <div key={task.Task}>
-                    <TaskItem taskTitle={task.Task} taskDelete={handleDeleteTask} />
+                    <TaskItem taskTitle={task.Task} taskDelete={handleDeleteTask} taskStatus={task.isDone} taskStatusHandler={handleTaskStatus} />
                 </div>)
             )
         })
@@ -96,7 +96,7 @@ export default function Home() {
                     isDone: false
                 },
                 {
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json' }
                 })
             setNewTask("");
         }
@@ -116,19 +116,33 @@ export default function Home() {
         setTasks(tasks.filter(task => task.Task !== taskTitle))
     }
 
-    const handleTaskStatus = async () => {
-
+    const handleTaskStatus = async (taskTitle: string, taskStatus: boolean) => {
+        await axios.post("http://localhost:7777/todo/task_status",
+            {
+                TodoTitle: todoTitle,
+                Task: taskTitle,
+                user: user,
+                isDone: taskStatus
+            }, {
+            headers: { 'Content-Type': 'application/json' }
+        })
+        setTasks((tasks) => {
+            return (
+                tasks.map(task => task.Task === taskTitle ? { ...task, isDone: taskStatus } : task)
+            )
+        })
     }
 
     return (
         <div>
-            <Header />n
+            <Header />
             {/* {tasks.map(task => {
                 <TaskItem taskTitle={}/>
             })} */}
             <div className="flex flex-row justify-center">
                 <div className="flex flex-col">
                     {TaskItems}
+                    <div className="my-[12px]" />
                     <AddTask state={newTask} setState={setNewTask} button={handleAddTask}></AddTask>
                 </div>
             </div>
