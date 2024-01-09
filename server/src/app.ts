@@ -10,6 +10,7 @@ import { LogUserActivity } from "./middlewares/Logging";
 
 import { TodoModel } from "./models/Todo";
 import { UserModel } from "./models/User"
+// import mongoose from "mongoose";
 
 const TodoRoute = require('./routes/Todo')
 
@@ -17,6 +18,7 @@ const TodoRoute = require('./routes/Todo')
 const PORT = process.env.PORT || 7777;
 const JWT_SECRET = process.env.JWT_SECRET;
 const MONGODB_URL = process.env.MONGODB_URL;
+// console.log(MONGODB_URL)
 
 // Initialize all
 const app = express();
@@ -26,8 +28,14 @@ app.use(express.json());
 app.use(LogUserActivity);
 
 try {
-    mongoose.connect(MONGODB_URL);
-    console.log("MongoDB connection successfull!")
+    mongoose.connect(MONGODB_URL)
+        .then((res: any) => {
+            console.log("MongoDB connection successfull!")
+        })
+        .catch((err: any) => {
+            console.log(err);
+        })
+
 }
 catch (err) {
     console.log(err);
