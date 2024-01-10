@@ -1,15 +1,10 @@
-import {  } from "../controllers/Todo"
+import { RegisterUser } from "../controllers/User";
 import express from "express";
 
 const router = express.Router();
 
-router.post("/create_task", CreateTask);
-router.post("/create_todo", CreateTodo);
+router.post("/sign-up", RegisterUser);
+// router.post("/sign-in", CreateTodo);
 
-router.delete("/delete_task", DeleteTask);
-router.delete("/delete_todo", DeleteTodo);
-
-router.get("/get_tasks", GetAllTasksOfATodo);
-router.get("/get_todos", GetAllTodos);
 
 module.exports = router;

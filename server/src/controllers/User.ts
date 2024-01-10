@@ -9,26 +9,26 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const Users: mongoose.Model<UserType> = UserModel;
 
-const GetAllUsers = async (req: express.Request, res: express.Response) => {
-    const AllUserObjs = await Users.find();
+// const GetAllUsers = async (req: express.Request, res: express.Response) => {
+//     const AllUserObjs = await Users.find();
 
-    let AllUsers: string[] = [];
+//     let AllUsers: string[] = [];
 
-    for (let i = 0; i < AllUserObjs.length; i++) {
-        AllUsers.push(AllUserObjs[i].username);
-    }
+//     for (let i = 0; i < AllUserObjs.length; i++) {
+//         AllUsers.push(AllUserObjs[i].username);
+//     }
 
-    return AllUsers;
-}
+//     return AllUsers;
+// }
 
-export const GetUser = async (req: express.Request, res: express.Response) => {
+// export const GetUser = async (req: express.Request, res: express.Response) => {
 
-}
+// }
 
 export const RegisterUser = (req: express.Request, res: express.Response, next: express.NextFunction) => {
 
-    const username: string = req.header['username'] as string;
-    const password: string = req.header['password'] as string;
+    const username: string = req.body.username;
+    const password: string = req.body.password;
 
     const hashedPassword = md5(password);
     //check  if user already exists
@@ -47,47 +47,47 @@ export const RegisterUser = (req: express.Request, res: express.Response, next: 
         msg: "User registration successfull!"
     })
 
-    console.log("Registration successfull!");
+    console.log("User registration successfull!");
 }
 
-export function LoginUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+// export function LoginUser(req: express.Request, res: express.Response, next: express.NextFunction) {
 
-    const username: string = req.header['username'] as string;
-    const password: string = req.header['password'] as string;
+//     const username: string = req.header['username'] as string;
+//     const password: string = req.header['password'] as string;
 
-    const hashedPassword = md5(password);
+//     const hashedPassword = md5(password);
 
-    console.log("Logging in user: " + username)
+//     console.log("Logging in user: " + username)
 
-    async function getUserFromDB() {
-        let user = await Users.findOne({ username }).exec();
-        if (user !== undefined) {
-            // console.log("here")
-            // console.log(user);
-            return user;
-        }
-        else {
-            res.status(404).json({
-                msg: "User not found!"
-            })
-        }
-    }
-    getUserFromDB().then(user => {
-        if (user !== null && (user.username === username && user.hashedPassword === hashedPassword)) {
-            const token = jwt.sign(username, JWT_SECRET);
-            res.json({
-                msg: "User login successfull!",
-                accessToken: token
-            })
-            console.log("Logged in successfully!")
-        }
-        else {
-            console.log("Login failed!")
-            res.status(403).json({
-                msg: "Invalid credentials!"
-            })
-        }
-    })
-}
+//     async function getUserFromDB() {
+//         let user = await Users.findOne({ username }).exec();
+//         if (user !== undefined) {
+//             // console.log("here")
+//             // console.log(user);
+//             return user;
+//         }
+//         else {
+//             res.status(404).json({
+//                 msg: "User not found!"
+//             })
+//         }
+//     }
+//     getUserFromDB().then(user => {
+//         if (user !== null && (user.username === username && user.hashedPassword === hashedPassword)) {
+//             const token = jwt.sign(username, JWT_SECRET);
+//             res.json({
+//                 msg: "User login successfull!",
+//                 accessToken: token
+//             })
+//             console.log("Logged in successfully!")
+//         }
+//         else {
+//             console.log("Login failed!")
+//             res.status(403).json({
+//                 msg: "Invalid credentials!"
+//             })
+//         }
+//     })
+// }
 
 

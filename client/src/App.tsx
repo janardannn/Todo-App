@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom"
 import Home from "./pages/Home"
 import SignIn from "./pages/SignIn"
 import SignUp from "./pages/SignUp"
+import AccountCreationSuccessfull from "./pages/AccountCreationSuccessfull"
 
 export default function App() {
   // const [TaskItems, setTaskItems] = useState([])
@@ -25,9 +26,10 @@ export default function App() {
 
     <Routes>
       <Route path="/" element={<Home />}></Route>
-      <Route path="/signin" element={<SignIn />}></Route>
-      <Route path="/signup" element={<SignUp />}></Route>
-    </Routes>
+      <Route path="/sign-in" element={<SignIn />}></Route>
+      <Route path="/sign-up" element={<SignUp />}></Route>
+      <Route path="/account-created" element={<AccountCreationSuccessfull />}></Route>
+    </Routes >
     // <>
     //   <Header />
     //   <div className="flex justify-center">
