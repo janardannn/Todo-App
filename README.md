@@ -2,7 +2,7 @@
 
 Todo-App made using MERN stack and TypeScript 
 
-![Todo-App-Home](https://raw.githubusercontent.com/janardannn/Todo-App/main/resources/todo-app_home_page.png)
+![Todo-App-Home](https://raw.githubusercontent.com/janardannn/Todo-App/main/resources/todo-app-home_page.png)
 
 ![Todo-App-SignUp(password-hidden)](https://raw.githubusercontent.com/janardannn/Todo-App/main/resources/todo-app-sign_up-page-password_hidden.png)
 
