@@ -36,6 +36,7 @@ export default function Home() {
 
         const handleAuthError = () => {
             localStorage.clear()
+            navigate("/sign-in");
         }
 
         // let TaskItems: ReactElement[] = [];
@@ -78,9 +79,11 @@ export default function Home() {
 
                     // console.log(TaskItems)
                 }
-                catch (err) {
+                catch (err: any) {
                     console.log(err)
-                    handleAuthError();
+                    setAppErrStatus(true);
+                    setErrorMessage(`[${err.response.status}] ${err.response.data.msg} `)
+                    setTimeout(() => handleAuthError(), 2357);
                 }
             }
 
