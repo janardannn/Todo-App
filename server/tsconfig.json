@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "es2020",
         "module": "commonjs",
-        "outDir": "./dist",
+        "outDir": "./public",
         "strict": true,
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true
