@@ -59,6 +59,10 @@ app.use("/todo", TodoRoute);
 app.use("/user", UserRoute);
 
 // console.log(process.env.JWT_SECRET)
+
+app.get("/", (req, res) => {
+    res.status(200).send("App up and running ✅")
+})
 app.listen(PORT, () => {
     console.log("server is running")
 });
