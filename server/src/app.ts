@@ -14,6 +14,7 @@ import { UserModel } from "./models/User"
 
 const TodoRoute = require('./routes/Todo')
 const UserRoute = require("./routes/User")
+
 // ALL constants from .env file
 const PORT = process.env.PORT || 7777;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -57,6 +58,7 @@ const Users = UserModel;
 app.use("/todo", TodoRoute);
 app.use("/user", UserRoute);
 
+// console.log(process.env.JWT_SECRET)
 app.listen(PORT, () => {
     console.log("server is running")
 });

@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 import Footer from "../components/Footer";
+import { API_URL } from "../App";
 
 export default function SignUp() {
 
@@ -18,7 +19,11 @@ export default function SignUp() {
 
     const [viewPassword, setViewPassword] = useState<Boolean>(false);
 
-    const [accountCreattionStatus, setAccountCreattionStatus] = useState<Boolean>();
+    const [accountCreationStatus, setAccountCreationStatus] = useState<Boolean>(true);
+
+    const [accountCreationError, setAccountCreationError] = useState<String>()
+
+    const [submitDisabled, setSubmitDisabled] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
@@ -27,7 +32,7 @@ export default function SignUp() {
             return (
                 {
                     ...prevState,
-                    [e.target.name]: e.target.value
+                    [e.target.name]: e.target.value.trim()
                 }
             )
         })
@@ -35,20 +40,70 @@ export default function SignUp() {
 
     async function handleSubmit(e: React.MouseEvent | React.KeyboardEvent) {
         e.preventDefault();
+        setSubmitDisabled(true);
         // console.log(userData)
+        if (userData.username.length >= 4 && userData.password.length >= 4) {
+            try {
+                // create user account
+                const data = await axios.post(API_URL + "/user/sign-up",
+                    {
+                        username: userData.username,
+                        password: userData.password
+                    },
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                    })
 
-        const data = await axios.post("http://localhost:7777/user/sign-up",
-            {
-                username: userData.username,
-                password: userData.password
-            },
-            {
-                headers: { 'Content-Type': 'application/json' },
-            })
+                // give a todo to user
+                const todo = await axios.post(API_URL + "/todo/create_todo",
+                    {
+                        user: userData.username,
+                        TodoTitle: `${userData.username}'s todo`
+                    },
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                    })
 
-        if (data.status == 200) {
-            navigate("/account-created")
+                //sign in user and store token in localStorage
+                const signIn = await axios.post(API_URL + "/user/sign-in",
+                    {
+                        username: userData.username,
+                        password: userData.password
+                    },
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                    })
+
+                // console.log(data.status, todo.status, signIn.status)
+                if (data.status === 200 && todo.status === 200 && signIn.status === 200) {
+
+                    const TOKEN = signIn.data.Token;
+                    // console.log(data.data.Token)
+
+                    // clear previous 
+                    localStorage.clear();
+
+                    // set new
+                    localStorage.setItem("username", userData.username)
+                    localStorage.setItem("TOKEN", TOKEN)
+
+                    navigate("/account-created")
+                }
+            }
+            catch (err: any) {
+                setSubmitDisabled(false);
+                console.log(err.message)
+                setAccountCreationError(`[${err.response.status}] ${err.response.data.msg} `)
+                setAccountCreationStatus(false);
+            }
         }
+        else {
+            setSubmitDisabled(false);
+            setAccountCreationError(`username and password must have 4 or more characters`)
+            setAccountCreationStatus(false);
+
+        }
+
     }
 
     return (
@@ -57,9 +112,9 @@ export default function SignUp() {
                 <h1 className="mb-[4.5rem] text-3xl text-center">Create an account</h1>
                 <div className="flex justify-center">
                     <form className="flex flex-col">
-                        <input type="text" placeholder="username" name="username" value={userData.username} onChange={handleChange} className=" text-[1.3rem] w-[440px] h-[65px] border-2 border-slate-300 p-2.5 ml-8 rounded-lg my-[0.3rem] bg-[#242424] focus:outline-none"></input>
-                        <div className="flex flex-row text-[1.3rem] w-[440px] h-[65px] border-2 border-slate-300 pl-2.5 pb- ml-8 rounded-lg my-[0.3rem]">
-                            <input type={viewPassword ? "text" : "password"} placeholder="password" name="password" value={userData.password} onChange={handleChange} onKeyDown={(e) => {
+                        <input type="text" placeholder="username" name="username" value={userData.username} onChange={handleChange} className=" text-[1.3rem] w-[440px] h-[65px] border-2 border-slate-300 p-2.5 rounded-lg my-[0.3rem] bg-[#242424] focus:outline-none"></input>
+                        <div className="flex flex-row text-[1.3rem] w-[440px] h-[65px] border-2 border-slate-300 pl-2.5 pb- rounded-lg my-[0.3rem]">
+                            <input type={viewPassword ? "text" : "password"} placeholder="password" name="password" value={userData.password} onChange={handleChange} disabled={submitDisabled} onKeyDown={(e) => {
                                 if (e.key === "Enter") {
                                     handleSubmit(e);
                                 }
@@ -69,11 +124,13 @@ export default function SignUp() {
                                 setViewPassword(!viewPassword)
                             }} className="mx-2 my-auto w-[50px] h-[50px] rounded-lg">{viewPassword ? "👀" : "🫣"}</button>
                         </div>
-                        <button onClick={handleSubmit} className="text-center text-[1.3rem] w-[440px] h-[65px] border-2 border-slate-300 p-2.5 ml-8 rounded-lg my-[0.3rem] bg-green-800">Sign up</button>
+                        <button onClick={handleSubmit} disabled={submitDisabled} className={`text-center text-[1.3rem] w-[440px] h-[65px] border-2 border-slate-300 p-2.5 rounded-lg my-[0.3rem] bg-green-800 hover:${submitDisabled ? "bg-gray-700" : "bg-green-700"} ${submitDisabled ? "bg-gray-700" : ""}`}>Sign up</button>
                     </form>
                 </div>
             </div>
-            <div className="mt-[13rem]" >
+            {accountCreationStatus ? <div /> : <div className="mt-[1.5rem] text-center text-red-600">{"!!! " + accountCreationError}</div>}
+            <p className="mt-[2rem] text-center">Have an account? <Link to={"/sign-in"} className="underline">Sign in!</Link></p>
+            <div className="mt-[8rem]" >
                 <Footer />
             </div>
         </>

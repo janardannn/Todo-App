@@ -33,7 +33,7 @@ export const MarkTaskStatus = async (req: express.Request, res: express.Response
 
             await Todo.save();
 
-            res.status(201).json({
+            res.status(200).json({
                 msg: status === true ? "Task marked as done" : "Task marked as not done"
             });
         }
@@ -68,7 +68,7 @@ export const CreateTask = async (req: express.Request, res: express.Response) =>
 
             await Todo.save();
 
-            res.status(201).json({
+            res.status(200).json({
                 msg: "Task created and added to Todo"
             });
         }
@@ -122,7 +122,7 @@ export const CreateTodo = async (req: express.Request, res: express.Response) =>
 
             await newTodo.save();
 
-            res.status(201).json({
+            res.status(200).json({
                 msg: "Todo created"
             })
         }
