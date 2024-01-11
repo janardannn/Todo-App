@@ -27,6 +27,13 @@ export default function SignUp() {
 
     const navigate = useNavigate();
 
+    function handleErrMessage(err) {
+        setSubmitDisabled(false);
+        console.log(err.message)
+        setAccountCreationError(`[${err.response.status}] ${err.response.data.msg} `)
+        setAccountCreationStatus(false);
+    }
+
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         setUserData((prevState) => {
             return (
@@ -54,16 +61,6 @@ export default function SignUp() {
                         headers: { 'Content-Type': 'application/json' },
                     })
 
-                // give a todo to user
-                const todo = await axios.post(API_URL + "/todo/create_todo",
-                    {
-                        user: userData.username,
-                        TodoTitle: `${userData.username}'s todo`
-                    },
-                    {
-                        headers: { 'Content-Type': 'application/json' },
-                    })
-
                 //sign in user and store token in localStorage
                 const signIn = await axios.post(API_URL + "/user/sign-in",
                     {
@@ -75,10 +72,29 @@ export default function SignUp() {
                     })
 
                 // console.log(data.status, todo.status, signIn.status)
-                if (data.status === 200 && todo.status === 200 && signIn.status === 200) {
+                if (data.status === 200 && signIn.status === 200) {
 
                     const TOKEN = signIn.data.Token;
                     // console.log(data.data.Token)
+
+
+                    // give a todo to user
+                    try {
+                        await axios.post(API_URL + "/todo/create_todo",
+                            {
+                                user: userData.username,
+                                TodoTitle: `${userData.username}'s todo`
+                            },
+                            {
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${TOKEN}`
+                                }
+                            })
+                    }
+                    catch (err) {
+                        handleErrMessage(err);
+                    }
 
                     // clear previous 
                     localStorage.clear();
@@ -91,10 +107,7 @@ export default function SignUp() {
                 }
             }
             catch (err: any) {
-                setSubmitDisabled(false);
-                console.log(err.message)
-                setAccountCreationError(`[${err.response.status}] ${err.response.data.msg} `)
-                setAccountCreationStatus(false);
+                handleErrMessage(err)
             }
         }
         else {

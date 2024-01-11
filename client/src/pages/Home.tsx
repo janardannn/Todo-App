@@ -18,6 +18,8 @@ export default function Home() {
     }
     const user: string = localStorage.username;
     const TOKEN: string = localStorage.TOKEN;
+    axios.defaults.headers.common = { 'Authorization': `Bearer ${TOKEN}` }
+
 
     const navigate = useNavigate();
 
@@ -28,9 +30,13 @@ export default function Home() {
 
         const [TaskItems, setTaskItems] = useState<JSX.Element[]>([]);
 
-        const [appStatus, setAppStatus] = useState<Boolean>(true);
+        const [appErrStatus, setAppErrStatus] = useState<Boolean>(false);
 
         const [errorMessage, setErrorMessage] = useState<String>("")
+
+        const handleAuthError = () => {
+            localStorage.clear()
+        }
 
         // let TaskItems: ReactElement[] = [];
 
@@ -74,6 +80,7 @@ export default function Home() {
                 }
                 catch (err) {
                     console.log(err)
+                    handleAuthError();
                 }
             }
 
@@ -95,53 +102,76 @@ export default function Home() {
 
         const handleAddTask = async () => {
 
-
             if (newTask.trim() !== "") {
-                setTasks([...tasks, { Task: newTask, isDone: false }])
-                // console.log(todoTitle, newTask, user)
-                axios.post(API_URL + "/todo/create_task",
-                    {
-                        TodoTitle: todoTitle,
-                        Task: newTask,
-                        user: user,
-                        isDone: false
-                    },
-                    {
-                        headers: { 'Content-Type': 'application/json' }
-                    })
-                setNewTask("");
+                try {
+                    setTasks([...tasks, { Task: newTask, isDone: false }])
+                    // console.log(todoTitle, newTask, user)
+                    axios.post(API_URL + "/todo/create_task",
+                        {
+                            TodoTitle: todoTitle,
+                            Task: newTask,
+                            user: user,
+                            isDone: false
+                        },
+                        {
+                            headers: { 'Content-Type': 'application/json' }
+                        })
+                    setNewTask("");
+                }
+                catch (err: any) {
+                    console.log(err)
+                    setAppErrStatus(true);
+                    setErrorMessage(`[${err.response.status}] ${err.response.data.msg} `)
+
+                }
             }
         }
         // console.log(NewTask)
 
         const handleDeleteTask = async (taskTitle: string) => {
-            await axios.delete(API_URL + "/todo/delete_task",
-                {
-                    data: {
-                        TodoTitle: todoTitle,
-                        Task: taskTitle,
-                        user: user
-                    },
-                    headers: { 'Content-Type': 'application/json' }
-                })
-            setTasks(tasks.filter(task => task.Task !== taskTitle))
+            try {
+                await axios.delete(API_URL + "/todo/delete_task",
+                    {
+                        data: {
+                            TodoTitle: todoTitle,
+                            Task: taskTitle,
+                            user: user
+                        },
+                        headers: { 'Content-Type': 'application/json' }
+                    })
+                setTasks(tasks.filter(task => task.Task !== taskTitle))
+            }
+            catch (err: any) {
+                console.log(err)
+                setAppErrStatus(true);
+                setErrorMessage(`[${err.response.status}] ${err.response.data.msg} `)
+
+            }
         }
 
         const handleTaskStatus = async (taskTitle: string, taskStatus: boolean) => {
-            await axios.post(API_URL + "/todo/task_status",
-                {
-                    TodoTitle: todoTitle,
-                    Task: taskTitle,
-                    user: user,
-                    isDone: taskStatus
-                }, {
-                headers: { 'Content-Type': 'application/json' }
-            })
-            setTasks((tasks) => {
-                return (
-                    tasks.map(task => task.Task === taskTitle ? { ...task, isDone: taskStatus } : task)
-                )
-            })
+            try {
+                await axios.post(API_URL + "/todo/task_status",
+                    {
+                        TodoTitle: todoTitle,
+                        Task: taskTitle,
+                        user: user,
+                        isDone: taskStatus
+                    }, {
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                setTasks((tasks) => {
+                    return (
+                        tasks.map(task => task.Task === taskTitle ? { ...task, isDone: taskStatus } : task)
+                    )
+                })
+            }
+            catch (err: any) {
+                console.log(err)
+                setAppErrStatus(true);
+                setErrorMessage(`[${err.response.status}] ${err.response.data.msg} `)
+
+            }
         }
 
         return (
@@ -157,7 +187,7 @@ export default function Home() {
                         <AddTask state={newTask} setState={setNewTask} button={handleAddTask}></AddTask>
                     </div>
                 </div>
-                {<div className={`mt-[1.5rem] mb-[1.2rem] text-center ${appStatus ? "text-green-600" : "text-red-600"}`}>{appStatus ? errorMessage : "!!! " + errorMessage}</div>}
+                {<div className={`mt-[1.5rem] mb-[1.2rem] text-center ${appErrStatus ? "text-red-600" : ""}`}>{appErrStatus ? "!!! " + errorMessage : ""}</div>}
                 <Footer />
             </div >
         )

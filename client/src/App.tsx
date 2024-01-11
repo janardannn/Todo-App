@@ -6,7 +6,7 @@ import SignUp from "./pages/SignUp"
 import AccountCreationSuccessfull from "./pages/AccountCreationSuccessfull"
 
 export const API_URL = import.meta.env.VITE_API_BASE_URL;
-console.log(API_URL);
+// console.log(API_URL);
 
 export default function App() {
   // const [TaskItems, setTaskItems] = useState([])
