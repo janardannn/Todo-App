@@ -96,7 +96,7 @@ export const LoginUser = async (req: express.Request, res: express.Response, nex
             const user = await Users.findOne({ username });
 
             if (user !== null && (user.username === username && user.hashedPassword === hashedPassword)) {
-                const token = jwt.sign(username, JWT_SECRET as string);
+                const token = jwt.sign({ username }, JWT_SECRET as string, { expiresIn: "365 days" });
                 res.json({
                     msg: "User login successfull!",
                     Token: token

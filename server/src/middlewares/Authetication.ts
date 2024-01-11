@@ -13,17 +13,38 @@ export const AuthenticateUser = (req: any, res: any, next: any) => {
         const TOKEN: string = authHeader.split(" ")[1]
 
         // console.log(TOKEN)
-        // console.log(jwt.verify(TOKEN, JWT_SECRET))
 
         if (TOKEN) {
-            const decode = jwt.verify(TOKEN, JWT_SECRET);
-            if (decode === username) {
-                next()
+            try {
+                // console.log(jwt.verify(TOKEN, JWT_SECRET))
+
+                const decode: any = jwt.verify(TOKEN, JWT_SECRET);
+                if (decode.username === username) {
+                    next()
+                }
+                else {
+                    console.log("User authentication failed: " + username + " " + TOKEN)
+                    res.status(403).json({
+                        msg: "Authentication failed!"
+                    })
+                }
             }
+            catch (err) {
+                console.log("User authentication failed: " + username + " " + TOKEN)
+                res.status(403).json({
+                    msg: "Authentication failed!"
+                })
+            }
+        }
+        else {
+            console.log("User authentication failed: " + username + " " + "NO TOKEN")
+            res.status(403).json({
+                msg: "Authentication failed!"
+            })
         }
     }
     else {
-        console.log("User authentication failed")
+        console.log("User authentication failed: " + "username and TOKEN are not provided in Headers")
         res.status(403).json({
             msg: "Authentication failed!"
         })
