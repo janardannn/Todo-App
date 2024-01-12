@@ -13,10 +13,15 @@ export function LogUserActivity(req: any, res: any, next: any) {
 
     let data_to_log: string = (user !== undefined ? "USER " + "[" + user + "]" : "USER") + " requested: " + "[" + req.method + "] " + req.originalUrl + " ; requests: " + count + "\n"
 
-    fs.appendFile(logFilePath, data_to_log, function (err: any) {
-        if (err) throw err;
-        // console.log('Saved!');
-    });
+    try {
+        fs.appendFile(logFilePath, data_to_log, function (err: any) {
+            if (err) throw err;
+            // console.log('Saved!');
+        });
+    }
+    catch (err: any) {
+        console.log(err)
+    }
 
     next();
 }
