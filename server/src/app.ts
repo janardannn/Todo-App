@@ -5,7 +5,6 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 import { AuthenticateUser } from "./middlewares/Authetication";
-import { CheckIfUserExists } from "./middlewares/CheckIfUserExists";
 import { LogUserActivity } from "./middlewares/Logging";
 
 import { TodoModel } from "./models/Todo";
