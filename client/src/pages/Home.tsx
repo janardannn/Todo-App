@@ -94,7 +94,7 @@ export default function Home() {
             setTaskItems(() => {
                 return (
                     tasks.map(task => <div key={task.Task}>
-                        <TaskItem taskTitle={task.Task} taskDelete={handleDeleteTask} taskStatus={task.isDone} taskStatusHandler={handleTaskStatus} />
+                        <TaskItem taskTitle={task.Task} taskDelete={handleDeleteTask} taskStatus={task.isDone} taskStatusHandler={handleTaskStatus} handleTaskEdit={handleTaskEdit} />
                     </div>)
                 )
             })
@@ -166,6 +166,31 @@ export default function Home() {
                 setTasks((tasks) => {
                     return (
                         tasks.map(task => task.Task === taskTitle ? { ...task, isDone: taskStatus } : task)
+                    )
+                })
+            }
+            catch (err: any) {
+                console.log(err)
+                setAppErrStatus(true);
+                setErrorMessage(`[${err.response.status}] ${err.response.data.msg} `)
+
+            }
+        }
+
+        const handleTaskEdit = async (taskTitle: string, newTitle: string) => {
+            try {
+                await axios.post(API_URL + "/todo/task_edit",
+                    {
+                        user: user,
+                        TodoTitle: todoTitle,
+                        Task: taskTitle,
+                        NewTitle: newTitle,
+                    }, {
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                setTasks((tasks) => {
+                    return (
+                        tasks.map(task => task.Task === taskTitle ? { ...task, Task: newTitle } : task)
                     )
                 })
             }

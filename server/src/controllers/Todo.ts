@@ -324,3 +324,44 @@ export const GetAllTodos = async (req: express.Request, res: express.Response) =
     }
 }
 
+
+// to edit already existing task
+
+export const EditTask = async (req: express.Request, res: express.Response) => {
+    const TodoTitle: string = req.body.TodoTitle;
+    const Task: string = req.body.Task;
+    const NewTaskTitle: string = req.body.NewTitle;
+    const user: string = req.body.user;
+
+    try {
+        if (await CheckIfTodoExists(TodoTitle, user)) {
+            let Todo: any = await Todos.findOne({ TodoTitle, user });
+
+            // Todo.Tasks.push({ Task: Task, isDone });
+            for (let i = 0; i < Todo.Tasks.length; i++) {
+                if (Todo.Tasks[i].Task === Task) {
+                    Todo.Tasks[i].Task = NewTaskTitle;
+                }
+            }
+
+            await Todo.save();
+
+            res.status(200).json({
+                msg: "Task updated"
+            });
+        }
+        else {
+            res.status(403).json({
+                msg: "Todo does not exist"
+            })
+        }
+
+    }
+    catch (err) {
+        console.log(err);
+        res.status(501).json({
+            msg: "Failed to update task"
+        })
+    }
+
+}
