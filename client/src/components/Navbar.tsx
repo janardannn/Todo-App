@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import TodoItem from "./Todo";
+import { useState } from "react";
+// import TodoItem from "./Todo";
 import AddTodo from "./AddTodo";
 
-export default function TaskNavbar(props: any) {
+export default function TaskNavbar() {
 
     // const Todos: String[] = ["St"];
     const [Todos, setTodos] = useState([]);
 
-    const [NewTodo, setNewTodo] = useState("");
+    // const [NewTodo, setNewTodo] = useState("");
 
     // const [NavTodos, setNavTodos] = useState(() => {
     //     let JSXTodos = [];

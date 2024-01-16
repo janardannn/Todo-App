@@ -27,7 +27,7 @@ export default function SignUp() {
 
     const navigate = useNavigate();
 
-    function handleErrMessage(err) {
+    function handleErrMessage(err: any) {
         setSubmitDisabled(false);
         console.log(err.message)
         setAccountCreationError(`[${err.response.status}] ${err.response.data.msg} `)
