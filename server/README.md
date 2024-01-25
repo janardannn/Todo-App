@@ -12,6 +12,7 @@
 
 ### create .env file or copy it from git repo 
 `cp ../.env .`
+set .env values accordingly
 
 ### run the server
 `node app.js`

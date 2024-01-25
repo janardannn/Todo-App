@@ -13,6 +13,8 @@ let count = 0;
 export function LogUserActivity(req: any, res: any, next: any) {
     count++;
 
+    // console.log(req.ip)
+
     let time = moment().format("HH:mm:ss DD/MM/YYYY")
 
     let user = req.body.user || req.query.user || req.body.username
